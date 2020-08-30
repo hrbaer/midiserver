@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>MIDI WebSocket Test</title>
+
+<style>
+  
+  body {
+    margin: 40px;
+    font-family: "Futura", sans-serif;
+    color: #555;
+  }
+  
+  button {
+    width: 50mm;
+  }
+  
+  a {
+    color: #d80;
+    text-decoration: none;
+    cursor: pointer;
+  }
+
+  a:hover {
+    color: #c00;
+  }
+
+</style>
+
+<script>
+
+  window.onload = function(evt) {
+    
+    let connection = new WebSocket('ws://localhost:8888')
+
+    function showMessage(msg) {
+      document.querySelector('#msg').textContent = msg
+    }
+
+    // Connection opened
+    connection.onopen = function () {
+      showMessage(`Connected to "${connection.url}"`)
+    }
+
+
+    // Log errors
+    connection.onerror = function (error) {
+      console.log('ERROR', arguments)
+      showMessage(`WebSocket Error: ${error}`)
+    }
+
+
+    // Log messages from the server
+    connection.onmessage = function (e) {
+      showMessage(e.data)
+    }
+    
+    
+    function sendEvent(event) {
+      connection.send(JSON.stringify(event))
+    }
+
+
+    function playNotes(notes) {
+      sendEvent({ _type: 'reset' })
+      notes.forEach((note, i) => {
+        let channel = note.channel || 0
+        let event = { _type: 'noteon', note: note.key, velocity: note.velocity, channel, time: note.time }
+        sendEvent(event)
+        event = { _type: 'noteoff', note: note.key, velocity: note.velocity, channel, time: note.time + note.length }
+        sendEvent(event)
+      })
+    }
+
+
+    function fastChromaticRun() {
+      let notes = []
+      const N1 = 21
+      const N2 = N1 + 88
+      let from = N1, to = N2, t = 100
+      for (let i = from; i <= to; i += 1) {
+        notes.push({ key: i, velocity: 80 , time: (i - from + 1) * t, length: t, channel: 0 })
+      }
+      playNotes(notes)
+    }
+    
+    
+    document.getElementById('fastChromaticRun').addEventListener('click', event => {
+      fastChromaticRun()
+    })
+    
+  }
+
+</script>
+
+</head>
+
+<body>
+  
+  <h2>MIDI WebSocket Server Test</h2>
+  <p>
+    To test this MIDI WebSocket server, proceed as follows:
+  </p>
+  <ol>
+    <li>Open terminal and install NPM modules</li>
+    <li>Run MIDI WebSocket server</li>
+    <li>Run MIDI player (e. g. Sforzando by Plogue) and open soundfont</li>
+    <li>Connect to MIDI output "WSS Out"</li>
+    <li>Send MIDI events (see below)</li>
+  </ol>
+  
+  <h3>Run Tests</h3>
+  <button id="fastChromaticRun">Fast Chromatic Run</button>
+  
+  <h3>Console</h3>
+  <pre id="msg">…</pre>
+  
+  <h3>Command Line arguments</h3>
+  <p>The command line tools recognizes the following options:</p>
+<pre>Usage: node index.js [options]
+-i &lt;midi input&gt;: Use the specified input device
+-o &lt;midi output&gt;: Use the specified output device
+-h This help
+-p &lt;n&gt;: Port number (default: 8888)
+-l List available midi devices or drivers
+-v Verbose MIDI events</pre>
+  
+  <h3>Links</h3>
+  <p>Known to co-operate with these applications:</p>
+  <p>
+    <div><a href="https://www.plogue.com/products/sforzando.html" target="_blank">sforzando</a>: Sample player, SFZ 2.0 compliant, MIDI interface.</div>
+    <div><a href="https://www.webaudiomodules.org/wamsynths/webdx7/" target="_blank">webDX7</a>: Virtual Yamaha DX7 synthesizer, Web Audio Module, MIDI interface.</div>
+    <div><a href="http://www.ursamedia.ch/clavier/" target="_blank">Clavier</a>: Web app for musical interpretation, MIDI over WebSocket.</div>
+
+  </p>
+  </a>
+
+</body>
+</html>

@@ -28,7 +28,7 @@ The command line tools recognizes the following options:
 Known to co-operate with these applications:  
 [sforzando](https://www.plogue.com/products/sforzando.html): Sample player, SFZ 2.0 compliant, MIDI interface.  
 [webDX7](https://www.webaudiomodules.org/wamsynths/webdx7/): Virtual Yamaha DX7 synthesizer, Web Audio Module, MIDI interface.  
-[Clavier](http://www.ursamedia.ch/clavier/): Web app for musical interpretation, MIDI over WebSocket.  
+[Clavier](https://www.ursamedia.ch/clavier/): Web app for musical interpretation, MIDI over WebSocket.  
 
 
 

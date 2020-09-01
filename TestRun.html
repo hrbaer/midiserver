@@ -46,7 +46,7 @@
 
     // Log errors
     connection.onerror = function (error) {
-      console.log('ERROR', arguments)
+      console.log('ERROR', error)
       showMessage(`WebSocket Error: ${error}`)
     }
 
@@ -130,7 +130,7 @@
   <p>Known to co-operate with these applications:</p>
   <div><a href="https://www.plogue.com/products/sforzando.html" target="_blank">sforzando</a>: Sample player, SFZ 2.0 compliant, MIDI interface.</div>
   <div><a href="https://www.webaudiomodules.org/wamsynths/webdx7/" target="_blank">webDX7</a>: Virtual Yamaha DX7 synthesizer, Web Audio Module, MIDI interface.</div>
-  <div><a href="http://www.ursamedia.ch/clavier/" target="_blank">Clavier</a>: Web app for musical interpretation, MIDI over WebSocket.</div>
+  <div><a href="https://www.ursamedia.ch/clavier/" target="_blank">Clavier</a>: Web app for musical interpretation, MIDI over WebSocket.</div>
 
 </body>
 </html>
